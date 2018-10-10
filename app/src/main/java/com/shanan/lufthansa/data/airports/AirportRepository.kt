@@ -1,11 +1,13 @@
-package com.shanan.lufthansa.data.remote
+package com.shanan.lufthansa.data.airports
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.api.getAirports
-import com.shanan.lufthansa.data.db.AirportLocalCache
+import com.shanan.lufthansa.api.requestAccessToken
+import com.shanan.lufthansa.data.airports.db.AirportLocalCache
 import com.shanan.lufthansa.model.AirportSearchResult
+import com.shanan.lufthansa.model.AuthResponse
 
 /**
  * Repository class that works with local and remote data sources.
@@ -21,9 +23,25 @@ class AirportRepository(
 
     // LiveData of network errors.
     private val networkErrors = MutableLiveData<String>()
+    private val authResponse = MutableLiveData<AuthResponse>()
 
     // avoid triggering multiple requests in the same time
     private var isRequestInProgress = false
+
+    fun auth() {
+
+        if (isRequestInProgress) return
+
+        isRequestInProgress = true
+        requestAccessToken(service, { auth ->
+            authResponse.postValue(auth)
+            isRequestInProgress
+
+        }, { error ->
+            networkErrors.postValue(error)
+            isRequestInProgress = false
+        })
+    }
 
     /**
      * Search airports whose names match the query.

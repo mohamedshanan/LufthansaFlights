@@ -1,4 +1,4 @@
-package com.shanan.lufthansa.data.db
+package com.shanan.lufthansa.data.airports.db
 
 import android.content.Context
 import androidx.room.Database

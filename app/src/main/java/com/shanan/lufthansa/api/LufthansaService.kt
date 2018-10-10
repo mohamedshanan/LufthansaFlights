@@ -1,6 +1,7 @@
 package com.shanan.lufthansa.api
 
 import android.util.Log
+import com.shanan.lufthansa.BuildConfig
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AirportsResponse
 import com.shanan.lufthansa.model.AuthResponse
@@ -53,6 +54,33 @@ fun getAirports(
                 }
 
                 override fun onFailure(call: Call<AirportsResponse>, t: Throwable) {
+                    Log.d(TAG, "got a response ${t.message}")
+                    onError(t.message ?: "unknown error")
+                }
+            }
+    )
+}
+
+fun requestAccessToken(
+        service: LufthansaService,
+        onSuccess: (auth: AuthResponse?) -> Unit,
+        onError: (error: String) -> Unit) {
+
+    service.authenticate(BuildConfig.LH_CLIENT_ID,
+            BuildConfig.LH_CLIENT_SECRET,
+            Constants.LH_GRANT_TYPE).enqueue(
+            object : Callback<AuthResponse> {
+                override fun onResponse(call: Call<AuthResponse>, response: Response<AuthResponse>) {
+                    Log.d(TAG, "got a response $response")
+                    if (response.isSuccessful) {
+                        val authResponse = response.body()
+                        onSuccess(authResponse)
+                    } else {
+                        onError(response.errorBody()?.string() ?: "Unknown error")
+                    }
+                }
+
+                override fun onFailure(call: Call<AuthResponse>, t: Throwable) {
                     Log.d(TAG, "got a response ${t.message}")
                     onError(t.message ?: "unknown error")
                 }

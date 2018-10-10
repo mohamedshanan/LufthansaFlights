@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.shanan.lufthansa.data.remote.AirportRepository
+import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AirportSearchResult
 

@@ -3,9 +3,9 @@ package com.shanan.lufthansa.injection
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.shanan.lufthansa.api.LufthansaService
-import com.shanan.lufthansa.data.db.AirportDatabase
-import com.shanan.lufthansa.data.db.AirportLocalCache
-import com.shanan.lufthansa.data.remote.AirportRepository
+import com.shanan.lufthansa.data.airports.AirportRepository
+import com.shanan.lufthansa.data.airports.db.AirportDatabase
+import com.shanan.lufthansa.data.airports.db.AirportLocalCache
 import java.util.concurrent.Executors
 
 
