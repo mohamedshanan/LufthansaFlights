@@ -41,7 +41,7 @@ data class Name(
 )
 
 data class Position(
-        @SerializedName("Coordinate") val coordinate: Coordinate
+        @Embedded @SerializedName("Coordinate") val coordinate: Coordinate
 )
 
 data class Coordinate(

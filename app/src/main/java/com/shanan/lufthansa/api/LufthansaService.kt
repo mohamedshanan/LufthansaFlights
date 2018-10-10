@@ -28,7 +28,7 @@ private const val IN_QUALIFIER = "in:name,description"
  * @param onSuccess function that defines how to handle the list of airports received
  * @param onError function that defines how to handle request failure
  */
-fun searchAirports(
+fun getAirports(
         service: LufthansaService,
         token: String,
         offset: Int,
@@ -37,9 +37,9 @@ fun searchAirports(
         onError: (error: String) -> Unit) {
     Log.d(TAG, "query: $token, page: $offset, itemsPerPage: $limit")
 
-    val apiQuery = token + IN_QUALIFIER
+//    val apiQuery = token + IN_QUALIFIER
 
-    service.getAirports(apiQuery, offset, limit).enqueue(
+    service.getAirports(token, offset, limit).enqueue(
             object : Callback<AirportsResponse> {
                 override fun onResponse(call: Call<AirportsResponse>, response: Response<AirportsResponse>) {
                     Log.d(TAG, "got a response $response")
@@ -53,6 +53,7 @@ fun searchAirports(
                 }
 
                 override fun onFailure(call: Call<AirportsResponse>, t: Throwable) {
+                    Log.d(TAG, "got a response ${t.message}")
                     onError(t.message ?: "unknown error")
                 }
             }
@@ -87,7 +88,7 @@ interface LufthansaService {
 
         fun create(): LufthansaService {
             val logger = HttpLoggingInterceptor()
-            logger.level = Level.BASIC
+            logger.level = Level.BODY
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)

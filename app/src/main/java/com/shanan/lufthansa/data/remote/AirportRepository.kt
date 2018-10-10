@@ -3,7 +3,7 @@ package com.shanan.lufthansa.data.remote
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.shanan.lufthansa.api.LufthansaService
-import com.shanan.lufthansa.api.searchAirports
+import com.shanan.lufthansa.api.getAirports
 import com.shanan.lufthansa.data.db.AirportLocalCache
 import com.shanan.lufthansa.model.AirportSearchResult
 
@@ -47,7 +47,7 @@ class AirportRepository(
         if (isRequestInProgress) return
 
         isRequestInProgress = true
-        searchAirports(service, query, offset, LIMIT, { airports ->
+        getAirports(service, query, offset, LIMIT, { airports ->
             cache.insert(airports, {
                 offset += LIMIT
                 isRequestInProgress = false
