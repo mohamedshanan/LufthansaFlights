@@ -5,19 +5,21 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.shanan.lufthansa.model.Airport
+import com.shanan.lufthansa.model.AuthResponse
 import com.shanan.lufthansa.utils.Constants.AIRPORT_DB_NAME
 
 /**
  * Database schema that holds the list of airports.
  */
 @Database(
-        entities = [Airport::class],
-        version = 1,
+        entities = [Airport::class, AuthResponse::class],
+        version = 2,
         exportSchema = false
 )
 abstract class AirportDatabase : RoomDatabase() {
 
     abstract fun airportDao(): AirportDao
+    abstract fun authDao(): AuthDao
 
     companion object {
 

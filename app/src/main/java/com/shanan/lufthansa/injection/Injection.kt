@@ -21,7 +21,7 @@ object Injection {
      */
     private fun provideCache(context: Context): AirportLocalCache {
         val database = AirportDatabase.getInstance(context)
-        return AirportLocalCache(database.airportDao(), Executors.newSingleThreadExecutor())
+        return AirportLocalCache(database.airportDao(), database.authDao(), Executors.newSingleThreadExecutor())
     }
 
     /**

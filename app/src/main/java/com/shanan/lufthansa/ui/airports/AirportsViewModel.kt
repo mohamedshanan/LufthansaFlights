@@ -19,18 +19,19 @@ class AirportsViewModel(private val repository: AirportRepository) : ViewModel()
     }
 
     private val queryLiveData = MutableLiveData<String>()
-    private val repoResult: LiveData<AirportSearchResult> = Transformations.map(queryLiveData, {
+    private val airportsResult: LiveData<AirportSearchResult> = Transformations.map(queryLiveData) {
         repository.search(it)
-    })
+    }
 
-    val airport: LiveData<List<Airport>> = Transformations.switchMap(repoResult,
-            { it -> it.data })
-    val networkErrors: LiveData<String> = Transformations.switchMap(repoResult,
-            { it -> it.networkErrors })
+    val airports: LiveData<List<Airport>> = Transformations.switchMap(airportsResult)
+    { it -> it.data }
+    val networkErrors: LiveData<String> = Transformations.switchMap(airportsResult)
+    { it -> it.networkErrors }
 
     /**
      * Search an airport based on a query string.
      */
+
     fun searchRepo(queryString: String) {
         queryLiveData.postValue(queryString)
         repository.search(queryString)
