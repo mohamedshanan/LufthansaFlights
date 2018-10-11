@@ -127,7 +127,6 @@ interface LufthansaService {
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)
-                    .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .build()
 

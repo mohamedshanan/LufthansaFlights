@@ -27,6 +27,7 @@ class AirportRepository(
     val authResponse = MutableLiveData<AuthResponse>()
     var authTokenResult = AuthTokenResult(authResponse, networkErrors)
     var loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+    var isAirportsCached: MutableLiveData<Boolean> = MutableLiveData()
 
     // avoid triggering multiple requests in the same time
     private var isRequestInProgress = false
@@ -44,7 +45,8 @@ class AirportRepository(
                 requestAccessToken(service, { auth ->
                     cache.insert(auth) {
                         isRequestInProgress = false
-                        getAirports(it[0].access_token)
+                        loadingVisibility.value = View.GONE
+                        authResponse.postValue(auth)
                     }
 
                 }, { error ->
@@ -55,32 +57,45 @@ class AirportRepository(
                 })
             } else {
                 isRequestInProgress = false
-                getAirports(it[0].access_token)
+                loadingVisibility.value = View.GONE
+                authResponse.postValue(it[0])
             }
         }
     }
 
+    fun getAirports(token: String, isCached: Boolean) {
+
+        if (isCached) {
+            isAirportsCached.postValue(true)
+        } else {
+            getAirports(token)
+        }
+    }
+
     /**
-     * Search airports whose names match the query.
+     * Getting all airports paginated and saving them to search them later
      */
     fun getAirports(token: String) {
 
         if (isRequestInProgress) return
-
         isRequestInProgress = true
+        loadingVisibility.postValue(View.VISIBLE)
 
         getAirports(service, token, offset, LIMIT, Constants.DEFAULT_LANG, { airports, totalCount ->
             cache.insert(airports) {
                 offset += LIMIT
                 isRequestInProgress = false
 
+                Log.d(TAG, "offset ${offset}")
+
                 // Request next batch of airports
                 if (offset < totalCount) {
                     getAirports(token)
+                } else {
+                    isAirportsCached.postValue(true)
+                    isRequestInProgress = false
+                    loadingVisibility.postValue(View.GONE)
                 }
-
-                Log.d(TAG, "offset ${offset}")
-
             }
         }, { error ->
             networkErrors.postValue(error)
