@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.shanan.lufthansa.R
 import com.shanan.lufthansa.injection.Injection
-import kotlinx.android.synthetic.main.activity_search_repositories.*
+import kotlinx.android.synthetic.main.activity_airports.*
 
 class AirportsActivity : AppCompatActivity() {
 
@@ -17,7 +17,7 @@ class AirportsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_search_repositories)
+        setContentView(R.layout.activity_airports)
 
         // get the view model
         viewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this))

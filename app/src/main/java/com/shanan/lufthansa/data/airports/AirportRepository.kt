@@ -1,7 +1,6 @@
 package com.shanan.lufthansa.data.airports
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.api.getAirports
@@ -20,13 +19,14 @@ class AirportRepository(
 ) {
 
     private val TAG = "AirportRepository"
-    // keep the last requested page. When the request is successful, increment the page number.
+    // keep the last requested item index. When the request is successful, increment the page number.
     private var offset = 0
-    // LiveData of data and errors.
+
+    // LiveData of data and network errors.
     val networkErrors = MutableLiveData<String>()
     val authResponse = MutableLiveData<AuthResponse>()
     var authTokenResult = AuthTokenResult(authResponse, networkErrors)
-    var loadingVisibility: MutableLiveData<Int> = MutableLiveData()
+
     var isAirportsCached: MutableLiveData<Boolean> = MutableLiveData()
 
     // avoid triggering multiple requests in the same time
@@ -37,7 +37,6 @@ class AirportRepository(
         if (isRequestInProgress) return
 
         isRequestInProgress = true
-        loadingVisibility.value = View.VISIBLE
 
         cache.getAccessToken().observeForever {
 
@@ -45,19 +44,16 @@ class AirportRepository(
                 requestAccessToken(service, { auth ->
                     cache.insert(auth) {
                         isRequestInProgress = false
-                        loadingVisibility.value = View.GONE
                         authResponse.postValue(auth)
                     }
 
                 }, { error ->
                     isRequestInProgress = false
                     authTokenResult.networkErrors.postValue(error)
-                    loadingVisibility.value = View.GONE
 
                 })
             } else {
                 isRequestInProgress = false
-                loadingVisibility.value = View.GONE
                 authResponse.postValue(it[0])
             }
         }
@@ -79,7 +75,6 @@ class AirportRepository(
 
         if (isRequestInProgress) return
         isRequestInProgress = true
-        loadingVisibility.postValue(View.VISIBLE)
 
         getAirports(service, token, offset, LIMIT, Constants.DEFAULT_LANG, { airports, totalCount ->
             cache.insert(airports) {
@@ -94,14 +89,11 @@ class AirportRepository(
                 } else {
                     isAirportsCached.postValue(true)
                     isRequestInProgress = false
-                    loadingVisibility.postValue(View.GONE)
                 }
             }
         }, { error ->
             networkErrors.postValue(error)
             isRequestInProgress = false
-            loadingVisibility.value = View.GONE
-
         })
     }
 

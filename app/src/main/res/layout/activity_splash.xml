@@ -22,5 +22,48 @@
             app:layout_constraintTop_toTopOf="parent"
             app:mutableVisibility="@{viewModel.getLoadingVisibility()}" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:mutableVisibility="@{viewModel.getSearchVisibility()}">
+
+            <AutoCompleteTextView
+                android:id="@+id/from"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:background="@null"
+                android:hint="@string/hint_from"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/to"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_margin="8dp"
+                android:background="@null"
+                android:hint="@string/hint_to"
+                android:inputType="text"
+                android:maxLines="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp" />
+
+            <Button
+                android:id="@+id/searchButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:padding="8dp"
+                android:text="@string/search_flights" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

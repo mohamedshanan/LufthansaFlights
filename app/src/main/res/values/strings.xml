@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Lufthansa</string>
     <string name="no_results">No airports found</string>
-    <string name="from_hint">From</string>
+    <string name="hint_from">From</string>
+    <string name="hint_to">To</string>
     <string name="retry">Retry</string>
+    <string name="search_flights">Find Flights</string>
 </resources>
