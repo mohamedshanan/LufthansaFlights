@@ -12,10 +12,12 @@ import com.shanan.lufthansa.model.AuthTokenResult
  */
 class SplashViewModel(repository: AirportRepository) : ViewModel() {
 
-    var authResult: AuthTokenResult = repository.authTokenResult
-    val loadingVisibility: MutableLiveData<Int> = repository.loadingVisibility
-
     init {
         repository.authenticate()
     }
+
+    var authResult: AuthTokenResult = repository.authTokenResult
+    val loadingVisibility: MutableLiveData<Int> = repository.loadingVisibility
+
+
 }

@@ -30,8 +30,8 @@ class AirportsActivity : AppCompatActivity() {
 //
 //        initAdapter()
         val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
-        viewModel.searchRepo("4efzfkkhdte2p6bdz2aav55q")
-        initSearch("4efzfkkhdte2p6bdz2aav55q")
+//
+        initSearch(query)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -76,7 +76,7 @@ class AirportsActivity : AppCompatActivity() {
         search_repo.text.trim().let {
             if (it.isNotEmpty()) {
                 list.scrollToPosition(0)
-                viewModel.searchRepo(it.toString())
+//                viewModel.searchRepo(it.toString())
 //                adapter.submitList(null)
             }
         }

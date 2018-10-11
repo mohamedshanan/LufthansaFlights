@@ -8,12 +8,12 @@ import com.google.gson.annotations.SerializedName
 import com.shanan.lufthansa.utils.NameListConverter
 
 data class AirportsResponse(
-        @SerializedName("AirportResource") val airportResource: AirportResource,
-        val Meta: Meta
+        @SerializedName("AirportResource") val airportResource: AirportResource
 )
 
 data class AirportResource(
-        @SerializedName("Airports") val airports: Airports
+        @SerializedName("Airports") val airports: Airports,
+        @SerializedName("Meta") val meta: Meta
 )
 
 data class Airports(
@@ -28,7 +28,6 @@ data class Airport(
         @Embedded @SerializedName("Position") val position: Position,
         @SerializedName("CityCode") val cityCode: String,
         @SerializedName("CountryCode") val countryCode: String,
-        @SerializedName("LocationType") val locationType: String,
         @Embedded @SerializedName("Names") val names: Names
 )
 
@@ -45,18 +44,11 @@ data class Position(
 )
 
 data class Coordinate(
-        @SerializedName("Latitude") val latitude: Double,
-        @SerializedName("Longitude") val longitude: Double
+        @SerializedName("Latitude") val latitude: Double?,
+        @SerializedName("Longitude") val longitude: Double?
 )
 
 
 data class Meta(
-        @SerializedName("@Version") val version: String,
-        @SerializedName("Link") val link: List<Link>,
         @SerializedName("TotalCount") val totalCount: Int
-)
-
-data class Link(
-        @SerializedName("@Href") val href: String,
-        @SerializedName("@Rel") val Rel: String
 )

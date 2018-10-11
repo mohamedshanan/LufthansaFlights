@@ -7,4 +7,5 @@ object Constants {
     const val LH_GRANT_TYPE: String = "client_credentials"
     const val AUTHORIZATION_HEADER: String = "Authorization"
     const val BEARER: String = "Bearer "
+    const val DEFAULT_LANG: String = "en"
 }

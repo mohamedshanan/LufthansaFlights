@@ -7,9 +7,9 @@ import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.api.getAirports
 import com.shanan.lufthansa.api.requestAccessToken
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
-import com.shanan.lufthansa.model.AirportSearchResult
 import com.shanan.lufthansa.model.AuthResponse
 import com.shanan.lufthansa.model.AuthTokenResult
+import com.shanan.lufthansa.utils.Constants
 
 /**
  * Repository class that works with local and remote data sources.
@@ -22,7 +22,6 @@ class AirportRepository(
     private val TAG = "AirportRepository"
     // keep the last requested page. When the request is successful, increment the page number.
     private var offset = 0
-
     // LiveData of data and errors.
     val networkErrors = MutableLiveData<String>()
     val authResponse = MutableLiveData<AuthResponse>()
@@ -40,27 +39,23 @@ class AirportRepository(
         loadingVisibility.value = View.VISIBLE
 
         cache.getAccessToken().observeForever {
-            Log.d(TAG, "token : ${it?.size}")
 
             if (it.isEmpty()) {
                 requestAccessToken(service, { auth ->
                     cache.insert(auth) {
-                        authTokenResult.data.postValue(auth)
                         isRequestInProgress = false
-                        loadingVisibility.value = View.GONE
+                        getAirports(it[0].access_token)
                     }
 
                 }, { error ->
-                    authTokenResult.networkErrors.postValue(error)
                     isRequestInProgress = false
+                    authTokenResult.networkErrors.postValue(error)
                     loadingVisibility.value = View.GONE
 
                 })
             } else {
-                authTokenResult.data.postValue(it[0])
-                loadingVisibility.value = View.GONE
                 isRequestInProgress = false
-
+                getAirports(it[0].access_token)
             }
         }
     }
@@ -68,32 +63,23 @@ class AirportRepository(
     /**
      * Search airports whose names match the query.
      */
-    fun search(query: String): AirportSearchResult {
-        Log.d(TAG, "New query: $query")
-        offset = 0
-        requestAndSaveData(query)
+    fun getAirports(token: String) {
 
-        // Get data from the local cache
-        val data = cache.airportByName(query)
-
-        return AirportSearchResult(data, networkErrors)
-    }
-
-    fun requestMore(query: String) {
-        requestAndSaveData(query)
-    }
-
-    private fun requestAndSaveData(query: String) {
         if (isRequestInProgress) return
 
         isRequestInProgress = true
-        loadingVisibility.value = View.VISIBLE
 
-        getAirports(service, query, offset, LIMIT, { airports ->
+        getAirports(service, token, offset, LIMIT, Constants.DEFAULT_LANG, { airports, totalCount ->
             cache.insert(airports) {
                 offset += LIMIT
                 isRequestInProgress = false
-                loadingVisibility.value = View.GONE
+
+                // Request next batch of airports
+                if (offset < totalCount) {
+                    getAirports(token)
+                }
+
+                Log.d(TAG, "offset ${offset}")
 
             }
         }, { error ->

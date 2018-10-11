@@ -1,11 +1,15 @@
 package com.shanan.lufthansa.api
 
 import android.util.Log
+import com.google.gson.GsonBuilder
 import com.shanan.lufthansa.BuildConfig
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AirportsResponse
 import com.shanan.lufthansa.model.AuthResponse
+import com.shanan.lufthansa.model.Names
 import com.shanan.lufthansa.utils.Constants
+import com.shanan.lufthansa.utils.Constants.BEARER
+import com.shanan.lufthansa.utils.NamesClassJsonDeserializer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -15,6 +19,8 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.util.concurrent.TimeUnit
+
 
 private const val TAG = "LufthansaService"
 private const val IN_QUALIFIER = "in:name,description"
@@ -34,27 +40,27 @@ fun getAirports(
         token: String,
         offset: Int,
         limit: Int,
-        onSuccess: (airports: List<Airport>) -> Unit,
+        lang: String,
+        onSuccess: (airports: List<Airport>, totalCount: Int) -> Unit,
         onError: (error: String) -> Unit) {
     Log.d(TAG, "query: $token, page: $offset, itemsPerPage: $limit")
 
 //    val apiQuery = token + IN_QUALIFIER
 
-    service.getAirports(token, offset, limit).enqueue(
+    service.getAirports(BEARER.plus(token), offset, limit, lang).enqueue(
             object : Callback<AirportsResponse> {
                 override fun onResponse(call: Call<AirportsResponse>, response: Response<AirportsResponse>) {
-                    Log.d(TAG, "got a response $response")
                     if (response.isSuccessful) {
                         val airports = response.body()?.airportResource?.airports?.airport
                                 ?: emptyList()
-                        onSuccess(airports)
+                        onSuccess(airports, response.body()?.airportResource?.meta?.totalCount
+                                ?: offset+limit)
                     } else {
                         onError(response.errorBody()?.string() ?: "Unknown error")
                     }
                 }
 
                 override fun onFailure(call: Call<AirportsResponse>, t: Throwable) {
-                    Log.d(TAG, "got a response ${t.message}")
                     onError(t.message ?: "unknown error")
                 }
             }
@@ -108,7 +114,8 @@ interface LufthansaService {
     @GET("references/airports")
     fun getAirports(@Header(Constants.AUTHORIZATION_HEADER) token: String,
                     @Query("offset") offset: Int,
-                    @Query("limit") limit: Int):
+                    @Query("limit") limit: Int,
+                    @Query("limit") lang: String):
             Call<AirportsResponse>
 
 
@@ -120,11 +127,20 @@ interface LufthansaService {
 
             val client = OkHttpClient.Builder()
                     .addInterceptor(logger)
+                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .readTimeout(60, TimeUnit.SECONDS)
                     .build()
+
+            val gson = GsonBuilder()
+                    .registerTypeAdapter(Names::class.java, NamesClassJsonDeserializer())
+                    .setLenient()
+                    .create()
+
+
             return Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
                     .client(client)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build()
                     .create(LufthansaService::class.java)
         }

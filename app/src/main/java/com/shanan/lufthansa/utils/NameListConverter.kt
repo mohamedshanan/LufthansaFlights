@@ -10,7 +10,7 @@ class NameListConverter {
     internal var gson = Gson()
 
     @TypeConverter
-    fun stringToSomeObjectList(data: String?): List<Name> {
+    fun stringToNameList(data: String?): List<Name> {
         if (data == null) {
             return emptyList()
         }
@@ -21,7 +21,7 @@ class NameListConverter {
     }
 
     @TypeConverter
-    fun someObjectListToString(someObjects: List<Name>): String {
-        return gson.toJson(someObjects)
+    fun nameToString(names: List<Name>): String {
+        return gson.toJson(names)
     }
 }
