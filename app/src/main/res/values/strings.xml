@@ -7,4 +7,6 @@
     <string name="search_flights">Find Flights</string>
     <string name="same_source_destination">Origin and destination airports must be different</string>
     <string name="select_airports">Please enter origin and destination and try again.t</string>
+    <string name="departure_date">Pick departure date</string>
+    <string name="loading_airports">Loading airports data \n please wait</string>
 </resources>

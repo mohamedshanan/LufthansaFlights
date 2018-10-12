@@ -18,7 +18,7 @@ import com.shanan.lufthansa.injection.Injection
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthResponse
 import com.shanan.lufthansa.utils.Constants
-import com.shanan.lufthansa.utils.extension.Utils
+import com.shanan.lufthansa.utils.Utils
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -61,7 +61,14 @@ class SplashActivity : AppCompatActivity() {
         viewModel.isAirportsCached.observe(this, Observer {
 
             Utils.saveBooleanToPrefs(Constants.Prefs.IS_AIRPORTS_CACHED, it, this)
+
             if (it) {
+
+                viewModel.setDate()
+
+                binding.date.setOnClickListener {
+                    Utils.showFutureDateDialog(this, viewModel)
+                }
 
                 val watcher = object : TextWatcher {
                     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}

@@ -1,19 +1,26 @@
 package com.shanan.lufthansa.ui.splash
 
 
+import android.app.DatePickerDialog
 import android.util.Log
 import android.view.View
+import android.widget.DatePicker
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthTokenResult
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * ViewModel for the [SplashActivity] screen.
  * The ViewModel works with the [AirportRepository] to get the data.
  */
-class SplashViewModel(val repository: AirportRepository) : ViewModel() {
+class SplashViewModel(val repository: AirportRepository) : ViewModel(), DatePickerDialog.OnDateSetListener {
+
+    val departureDate: ObservableField<String> = ObservableField()
 
     var authResult: AuthTokenResult = repository.authTokenResult
     val loadingVisibility = MutableLiveData<Int>()
@@ -55,8 +62,28 @@ class SplashViewModel(val repository: AirportRepository) : ViewModel() {
     }
 
     fun getFlights(originCode: String?, destinationCode: String?) {
-        Log.d("_SplashActivity_", "from : ${originCode} to  : ${destinationCode}")
-
-
+        Log.d("_SplashActivity_", "from : ${originCode} to  : ${destinationCode} on ${departureDate.get()}")
     }
+
+    fun setDate() {
+        val c = Calendar.getInstance()
+        System.out.println("Current time => " + c.time)
+
+        val df = SimpleDateFormat("yyyy-MM-dd")
+        val formattedDate = df.format(c.time)
+
+        departureDate.set(formattedDate)
+    }
+
+    override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
+        val monthStr: String
+        if (month + 1 < 10) {
+            monthStr = "0".plus(month + 1)
+        } else {
+            monthStr = (month + 1).toString()
+        }
+        val formattedDate = "${year}-${monthStr}-${dayOfMonth}"
+        departureDate.set(formattedDate)
+    }
+
 }

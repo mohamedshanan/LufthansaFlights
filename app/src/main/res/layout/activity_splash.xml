@@ -11,16 +11,35 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:background="#fff"
         android:layout_height="match_parent">
 
-        <ProgressBar
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:mutableVisibility="@{viewModel.getLoadingVisibility()}" />
+            app:mutableVisibility="@{viewModel.getLoadingVisibility()}">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/loading_airports" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,9 +53,8 @@
             <AutoCompleteTextView
                 android:id="@+id/from"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@null"
                 android:completionThreshold="2"
                 android:hint="@string/hint_from"
                 android:inputType="text"
@@ -47,15 +65,26 @@
             <AutoCompleteTextView
                 android:id="@+id/to"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:background="@null"
                 android:completionThreshold="2"
                 android:hint="@string/hint_to"
                 android:inputType="text"
                 android:maxLines="1"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp" />
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:completionThreshold="2"
+                android:hint="@string/departure_date"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="8dp"
+                android:text="@={viewModel.departureDate}" />
 
             <Button
                 android:id="@+id/searchButton"
