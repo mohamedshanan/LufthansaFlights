@@ -1,4 +1,4 @@
-package com.shanan.lufthansa.ui.splash
+package com.shanan.lufthansa.ui.landing
 
 
 import android.app.DatePickerDialog
@@ -15,10 +15,10 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * ViewModel for the [SplashActivity] screen.
+ * ViewModel for the [LandingActivity] screen.
  * The ViewModel works with the [AirportRepository] to get the data.
  */
-class SplashViewModel(val repository: AirportRepository) : ViewModel(), DatePickerDialog.OnDateSetListener {
+class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePickerDialog.OnDateSetListener {
 
     val departureDate: ObservableField<String> = ObservableField()
 
@@ -69,7 +69,7 @@ class SplashViewModel(val repository: AirportRepository) : ViewModel(), DatePick
         val c = Calendar.getInstance()
         System.out.println("Current time => " + c.time)
 
-        val df = SimpleDateFormat("yyyy-MM-dd")
+        val df = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val formattedDate = df.format(c.time)
 
         departureDate.set(formattedDate)

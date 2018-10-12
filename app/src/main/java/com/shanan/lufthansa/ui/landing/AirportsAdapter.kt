@@ -1,4 +1,4 @@
-package com.shanan.lufthansa.ui.splash
+package com.shanan.lufthansa.ui.landing
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -33,8 +33,8 @@ open class AirportsAdapter(context: Context, resource: Int, list: ArrayList<Airp
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
 
-        var holder: ViewHolder
-        var retView: View
+        val holder: ViewHolder
+        val retView: View
 
         if (convertView == null) {
             retView = inflater.inflate(resource, null)

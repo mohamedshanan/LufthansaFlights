@@ -1,4 +1,4 @@
-package com.shanan.lufthansa.ui.splash
+package com.shanan.lufthansa.ui.landing
 
 import android.os.Bundle
 import android.text.Editable
@@ -21,9 +21,9 @@ import com.shanan.lufthansa.utils.Constants
 import com.shanan.lufthansa.utils.Utils
 import kotlinx.android.synthetic.main.activity_splash.*
 
-class SplashActivity : AppCompatActivity() {
+class LandingActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SplashViewModel
+    private lateinit var viewModel: LandingViewModel
     private lateinit var binding: ActivitySplashBinding
     private var errorSnackbar: Snackbar? = null
     private var fromAirport: Airport? = null
@@ -35,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this))
-                .get(SplashViewModel::class.java)
+                .get(LandingViewModel::class.java)
 
         binding.viewModel = viewModel
 
@@ -44,7 +44,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun addObservers() {
-        var isAirportsCached = Utils.getBooleanFromPrefs(Constants.Prefs.IS_AIRPORTS_CACHED, this)
+        val isAirportsCached = Utils.getBooleanFromPrefs(Constants.Prefs.IS_AIRPORTS_CACHED, this)
 
         viewModel.authResult.data.observe(this, Observer<AuthResponse> {
             viewModel.getAirports(it.access_token, isAirportsCached)
@@ -97,7 +97,7 @@ class SplashActivity : AppCompatActivity() {
 
                 viewModel.searchResults.observe(this, Observer {
 
-                    var nameMap: List<String> = it.map { it.names.name.value }
+                    val nameMap: List<String> = it.map { it.names.name.value }
                     val adapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, nameMap)
 
                     if (from.isFocused) {

@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.shanan.lufthansa.ui.splash.SplashViewModel" />
+            type="com.shanan.lufthansa.ui.landing.LandingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,8 +80,6 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:completionThreshold="2"
-                android:hint="@string/departure_date"
-                android:inputType="text"
                 android:maxLines="1"
                 android:padding="8dp"
                 android:drawableEnd="@drawable/ic_calendar"

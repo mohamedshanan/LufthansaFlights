@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.ui.airports.AirportsViewModel
-import com.shanan.lufthansa.ui.splash.SplashViewModel
+import com.shanan.lufthansa.ui.landing.LandingViewModel
 
 /**
  * Factory for ViewModels
@@ -16,9 +16,9 @@ class ViewModelFactory(private val repository: AirportRepository) : ViewModelPro
             @Suppress("UNCHECKED_CAST")
             return AirportsViewModel(repository) as T
         }
-        if (modelClass.isAssignableFrom(SplashViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(LandingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SplashViewModel(repository) as T
+            return LandingViewModel(repository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
