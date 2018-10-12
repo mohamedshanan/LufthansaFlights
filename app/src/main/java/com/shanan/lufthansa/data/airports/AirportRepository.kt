@@ -8,16 +8,13 @@ import com.shanan.lufthansa.api.requestAccessToken
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthResponse
-import com.shanan.lufthansa.model.AuthTokenResult
+import com.shanan.lufthansa.model.RequestResult
 import com.shanan.lufthansa.utils.Constants
 
 /**
  * Repository class that works with local and remote data sources.
  */
-class AirportRepository(
-        private val service: LufthansaService,
-        private val cache: AirportLocalCache
-) {
+class AirportRepository(private val service: LufthansaService, private val cache: AirportLocalCache) {
 
     private val TAG = "AirportRepository"
     // keep the last requested item index. When the request is successful, increment the page number.
@@ -26,7 +23,7 @@ class AirportRepository(
     // LiveData of data and network errors.
     val networkErrors = MutableLiveData<String>()
     val authResponse = MutableLiveData<AuthResponse>()
-    var authTokenResult = AuthTokenResult(authResponse, networkErrors)
+    var requestResult = RequestResult(authResponse, networkErrors)
 
     var isAirportsCached: MutableLiveData<Boolean> = MutableLiveData()
     var searchResults = MutableLiveData<List<Airport>>()
@@ -51,7 +48,7 @@ class AirportRepository(
 
                 }, { error ->
                     isRequestInProgress = false
-                    authTokenResult.networkErrors.postValue(error)
+                    requestResult.error.postValue(error)
 
                 })
             } else {

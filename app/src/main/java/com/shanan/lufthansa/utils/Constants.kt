@@ -4,7 +4,10 @@ object Constants {
     object Prefs {
         const val SHARED_PREFERENCES_SETTINGS: String = "shared_preferences_settings"
         const val IS_AIRPORTS_CACHED: String = "is_airports_cached"
+    }
 
+    object IntentPassing {
+        const val FLIGHT_PARAMETERS: String = "flight_parameters"
     }
 
     const val BASE_URL: String = "https://api.lufthansa.com/v1/"

@@ -35,6 +35,7 @@ abstract class AirportDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context) =
                 Room.databaseBuilder(context.applicationContext,
                         AirportDatabase::class.java, AIRPORT_DB_NAME)
+                        .fallbackToDestructiveMigration()
                         .build()
     }
 }

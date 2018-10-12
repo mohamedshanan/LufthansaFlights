@@ -1,11 +1,15 @@
 package com.shanan.lufthansa.injection
 
 import android.content.Context
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.data.airports.db.AirportDatabase
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
+import com.shanan.lufthansa.data.flights.FlightRepository
+import com.shanan.lufthansa.ui.flights.FlightsViewModel
+import com.shanan.lufthansa.ui.landing.LandingViewModel
 import java.util.concurrent.Executors
 
 
@@ -28,6 +32,14 @@ object Injection {
      * Creates an instance of [AirportRepository] based on the [LufthansaService] and a
      * [AirportLocalCache]
      */
+    private fun provideFlightRepository(context: Context): FlightRepository {
+        return FlightRepository(LufthansaService.create(), provideCache(context))
+    }
+
+    /**
+     * Creates an instance of [AirportRepository] based on the [LufthansaService] and a
+     * [AirportLocalCache]
+     */
     private fun provideAirportRepository(context: Context): AirportRepository {
         return AirportRepository(LufthansaService.create(), provideCache(context))
     }
@@ -36,8 +48,15 @@ object Injection {
      * Provides the [ViewModelProvider.Factory] that is then used to get a reference to
      * [ViewModel] objects.
      */
-    fun provideViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return ViewModelFactory(provideAirportRepository(context))
+
+    fun <T : ViewModel> provideViewModelFactory(context: Context, modelClass: Class<T>): ViewModelProvider.Factory {
+        if (modelClass.isAssignableFrom(FlightsViewModel::class.java)) {
+            return ViewModelFactory(provideFlightRepository(context))
+        }
+        if (modelClass.isAssignableFrom(LandingViewModel::class.java)) {
+            return ViewModelFactory(provideAirportRepository(context))
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 
 }

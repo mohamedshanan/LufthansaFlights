@@ -1,12 +1,14 @@
 <resources>
     <string name="app_name">Lufthansa</string>
-    <string name="no_results">No airports found</string>
     <string name="hint_from">From</string>
     <string name="hint_to">To</string>
-    <string name="retry">Retry</string>
+    <string name="ok">OK</string>
     <string name="search_flights">Find Flights</string>
     <string name="same_source_destination">Origin and destination airports must be different</string>
-    <string name="select_airports">Please enter origin and destination and try again.t</string>
+    <string name="select_airports">Please enter origin and destination and try again</string>
     <string name="departure_date">Pick departure date</string>
     <string name="loading_airports">Loading airports data \n please wait</string>
+    <string name="loading">Loading</string>
+    <string name="no_results">No results </string>
+    <string name="unknown">\?</string>
 </resources>

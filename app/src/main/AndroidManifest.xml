@@ -19,7 +19,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.airports.AirportsActivity" />
+        <activity android:name=".ui.flights.FlightsActivity" />
     </application>
 
 </manifest>

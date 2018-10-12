@@ -10,7 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.model.Airport
-import com.shanan.lufthansa.model.AuthTokenResult
+import com.shanan.lufthansa.model.AuthResponse
+import com.shanan.lufthansa.model.FlightRequest
+import com.shanan.lufthansa.model.RequestResult
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,11 +24,12 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
     val departureDate: ObservableField<String> = ObservableField()
 
-    var authResult: AuthTokenResult = repository.authTokenResult
+    var requestResult: RequestResult<AuthResponse> = repository.requestResult
     val loadingVisibility = MutableLiveData<Int>()
     val searchVisibility = MutableLiveData<Int>()
     val isAirportsCached: MutableLiveData<Boolean> = repository.isAirportsCached
     val searchResults: MutableLiveData<List<Airport>> = repository.searchResults
+    val flightRequest: MutableLiveData<FlightRequest> = MutableLiveData()
 
     init {
         loadingVisibility.value = View.VISIBLE
@@ -34,10 +37,10 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
         repository.authenticate()
 
-        authResult.data.observeForever {
+        requestResult.data.observeForever {
             loadingVisibility.value = View.GONE
         }
-        authResult.networkErrors.observeForever {
+        requestResult.error.observeForever {
             loadingVisibility.value = View.GONE
         }
 
@@ -62,12 +65,22 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
     }
 
     fun getFlights(originCode: String?, destinationCode: String?) {
+
         Log.d("_SplashActivity_", "from : ${originCode} to  : ${destinationCode} on ${departureDate.get()}")
+
+        if (originCode != null && destinationCode != null && departureDate.get() != null) {
+            if (!originCode.equals(destinationCode)) {
+                flightRequest.postValue(FlightRequest(originCode, destinationCode, departureDate.get().toString()))
+            } else {
+                requestResult.error.postValue("Origin and destination airports must be different")
+            }
+        } else {
+            requestResult.error.postValue("Please select origin, destination and departure date then try again.")
+        }
     }
 
     fun setDate() {
         val c = Calendar.getInstance()
-        System.out.println("Current time => " + c.time)
 
         val df = SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH)
         val formattedDate = df.format(c.time)
@@ -76,13 +89,8 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        val monthStr: String
-        if (month + 1 < 10) {
-            monthStr = "0".plus(month + 1)
-        } else {
-            monthStr = (month + 1).toString()
-        }
-        val formattedDate = "${year}-${monthStr}-${dayOfMonth}"
+        val monthStr = if (month + 1 < 10) "0".plus(month + 1) else (month + 1).toString()
+        val formattedDate = "$year-$monthStr-$dayOfMonth"
         departureDate.set(formattedDate)
     }
 

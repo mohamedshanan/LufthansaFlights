@@ -3,13 +3,9 @@ package com.shanan.lufthansa.api
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.shanan.lufthansa.BuildConfig
-import com.shanan.lufthansa.model.Airport
-import com.shanan.lufthansa.model.AirportsResponse
-import com.shanan.lufthansa.model.AuthResponse
-import com.shanan.lufthansa.model.Names
-import com.shanan.lufthansa.utils.Constants
+import com.shanan.lufthansa.model.*
+import com.shanan.lufthansa.utils.*
 import com.shanan.lufthansa.utils.Constants.BEARER
-import com.shanan.lufthansa.utils.NamesClassJsonDeserializer
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
@@ -45,8 +41,6 @@ fun getAirports(
         onError: (error: String) -> Unit) {
     Log.d(TAG, "query: $token, page: $offset, itemsPerPage: $limit")
 
-//    val apiQuery = token + IN_QUALIFIER
-
     service.getAirports(BEARER.plus(token), offset, limit, lang).enqueue(
             object : Callback<AirportsResponse> {
                 override fun onResponse(call: Call<AirportsResponse>, response: Response<AirportsResponse>) {
@@ -67,6 +61,52 @@ fun getAirports(
     )
 }
 
+/**
+ * Get a list of flights.
+ * Trigger a request to the Lufthansa open api with the following params:
+ * @param token authToken
+ * @param offset Number of records skipped
+ * @param limit Number of records per time
+ * @param request flight request data : origin & destination airports and departure date
+ *
+ * The result of the request is handled by the implementation of the functions passed as params
+ * @param onSuccess function that defines how to handle the list of flights received
+ * @param onError function that defines how to handle request failure
+ */
+fun searchFlights(
+        service: LufthansaService,
+        token: String,
+        request: FlightRequest,
+        offset: Int,
+        limit: Int,
+        onSuccess: (flightsResponse: FlightsResponse?) -> Unit,
+        onError: (error: String) -> Unit) {
+    Log.d(TAG, "query: $request, page: $offset, itemsPerPage: $limit")
+
+    service.searchFlights(request.origin, request.destination, request.fromDateTime, BEARER.plus(token), offset, limit).enqueue(
+            object : Callback<FlightsResponse> {
+                override fun onResponse(call: Call<FlightsResponse>, response: Response<FlightsResponse>) {
+                    if (response.isSuccessful) {
+                        onSuccess(response.body())
+                    } else {
+                        onError(response.errorBody()?.string() ?: "Unknown error")
+                    }
+                }
+
+                override fun onFailure(call: Call<FlightsResponse>, t: Throwable) {
+                    onError(t.message ?: "unknown error")
+                }
+            }
+    )
+}
+
+/**
+ * Request access token.
+ * Trigger a request to the Lufthansa open api
+ * The result of the request is handled by the implementation of the functions passed as params
+ * @param onSuccess function that defines how to handle the authentication object received
+ * @param onError function that defines how to handle request failure
+ */
 fun requestAccessToken(
         service: LufthansaService,
         onSuccess: (auth: AuthResponse?) -> Unit,
@@ -115,8 +155,20 @@ interface LufthansaService {
     fun getAirports(@Header(Constants.AUTHORIZATION_HEADER) token: String,
                     @Query("offset") offset: Int,
                     @Query("limit") limit: Int,
-                    @Query("limit") lang: String):
+                    @Query("lang") lang: String):
             Call<AirportsResponse>
+
+    /**
+     * Get a list of flight between two airports in the provided date
+     */
+    @GET("operations/schedules/{origin}/{destination}/{fromDateTime}")
+    fun searchFlights(@Path("origin") origin: String,
+                      @Path("destination") destination: String,
+                      @Path("fromDateTime") fromDateTime: String,
+                      @Header(Constants.AUTHORIZATION_HEADER) token: String,
+                      @Query("offset") offset: Int,
+                      @Query("limit") limit: Int):
+            Call<FlightsResponse>
 
 
     companion object {
@@ -132,6 +184,9 @@ interface LufthansaService {
 
             val gson = GsonBuilder()
                     .registerTypeAdapter(Names::class.java, NamesClassJsonDeserializer())
+                    .registerTypeAdapter(ScheduleResource::class.java, ScheduleResourceJsonDeserializer())
+                    .registerTypeAdapter(Schedule::class.java, ScheduleJsonDeserializer())
+                    .registerTypeAdapter(Terminal::class.java, TerminalClassDeserializer())
                     .setLenient()
                     .create()
 
