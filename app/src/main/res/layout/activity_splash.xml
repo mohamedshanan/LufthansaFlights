@@ -84,6 +84,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="8dp"
+                android:drawableEnd="@drawable/ic_calendar"
                 android:text="@={viewModel.departureDate}" />
 
             <Button
