@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
@@ -35,12 +34,10 @@ class LandingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
         viewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this, LandingViewModel::class.java))
                 .get(LandingViewModel::class.java)
-
         binding.viewModel = viewModel
 
         addObservers()
@@ -102,17 +99,8 @@ class LandingActivity : AppCompatActivity() {
                         to.setAdapter(adapter)
                     }
 
-                    binding.from.onItemClickListener = object : AdapterView.OnItemClickListener {
-                        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            fromAirport = it[position]
-                        }
-                    }
-
-                    binding.to.onItemClickListener = object : AdapterView.OnItemClickListener {
-                        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                            toAirport = it[position]
-                        }
-                    }
+                    binding.from.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> fromAirport = it[position] }
+                    binding.to.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> toAirport = it[position] }
                 })
             }
         })
@@ -126,7 +114,6 @@ class LandingActivity : AppCompatActivity() {
 
     private fun showSnackBar(message: String) {
         errorSnackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_INDEFINITE)
-        errorSnackBar?.setAction(R.string.ok, { viewModel.auth() })
         errorSnackBar?.show()
     }
 }
