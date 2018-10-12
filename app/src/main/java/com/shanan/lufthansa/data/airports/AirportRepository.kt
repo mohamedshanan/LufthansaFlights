@@ -6,6 +6,7 @@ import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.api.getAirports
 import com.shanan.lufthansa.api.requestAccessToken
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
+import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthResponse
 import com.shanan.lufthansa.model.AuthTokenResult
 import com.shanan.lufthansa.utils.Constants
@@ -28,6 +29,7 @@ class AirportRepository(
     var authTokenResult = AuthTokenResult(authResponse, networkErrors)
 
     var isAirportsCached: MutableLiveData<Boolean> = MutableLiveData()
+    var searchResults = MutableLiveData<List<Airport>>()
 
     // avoid triggering multiple requests in the same time
     private var isRequestInProgress = false
@@ -95,6 +97,20 @@ class AirportRepository(
             networkErrors.postValue(error)
             isRequestInProgress = false
         })
+    }
+
+    /**
+     * Search airports whose name, code, or cityCode match the query.
+     */
+    fun searchAirports(query: String) {
+        Log.d(TAG, "New query: $query")
+
+        cache.searchAirports(query).observeForever {
+
+            if (!it.isEmpty()) {
+                searchResults.postValue(it)
+            }
+        }
     }
 
     companion object {

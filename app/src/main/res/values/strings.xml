@@ -5,4 +5,6 @@
     <string name="hint_to">To</string>
     <string name="retry">Retry</string>
     <string name="search_flights">Find Flights</string>
+    <string name="same_source_destination">Origin and destination airports must be different</string>
+    <string name="select_airports">Please enter origin and destination and try again.t</string>
 </resources>

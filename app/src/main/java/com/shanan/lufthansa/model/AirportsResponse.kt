@@ -23,8 +23,7 @@ data class Airports(
 @Entity
 @TypeConverters(NameListConverter::class)
 data class Airport(
-        @PrimaryKey(autoGenerate = true) val id: Int,
-        @SerializedName("AirportCode") val airportCode: String,
+        @PrimaryKey @SerializedName("AirportCode") val airportCode: String,
         @Embedded @SerializedName("Position") val position: Position,
         @SerializedName("CityCode") val cityCode: String,
         @SerializedName("CountryCode") val countryCode: String,
@@ -32,7 +31,7 @@ data class Airport(
 )
 
 data class Names(
-        @SerializedName("Name") val name: List<Name>
+        @Embedded @SerializedName("Name") val name: Name
 )
 
 data class Name(

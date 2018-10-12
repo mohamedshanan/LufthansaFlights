@@ -32,10 +32,10 @@ class AirportLocalCache(
      * multiple words separated by spaces, then we allow any characters between the words.
      * @param name airport name
      */
-    fun airportByName(name: String): LiveData<List<Airport>> {
+    fun searchAirports(query: String): LiveData<List<Airport>> {
         // appending '%' so we can allow other characters to be before and after the query string
-        val query = "%${name.replace(' ', '%')}%"
-        return airportDao.airportByName(query)
+        val query = "%${query.toUpperCase().trim()}%"
+        return airportDao.searchAirports(query)
     }
 
     /**

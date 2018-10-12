@@ -19,7 +19,7 @@ interface AirportDao {
     // Do a similar query as the search API:
     // Look for airports that contain the query string in the name
     @Query("SELECT * FROM Airport WHERE (cityCode LIKE :queryString) OR (airportCode LIKE " +
-            ":queryString) OR (name LIKE :queryString) ")
-    fun airportByName(queryString: String): LiveData<List<Airport>>
+            ":queryString) OR (value LIKE :queryString) LIMIT 5")
+    fun searchAirports(queryString: String): LiveData<List<Airport>>
 
 }

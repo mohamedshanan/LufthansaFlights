@@ -13,7 +13,7 @@ import com.shanan.lufthansa.utils.Constants.AIRPORT_DB_NAME
  */
 @Database(
         entities = [Airport::class, AuthResponse::class],
-        version = 3,
+        version = 5,
         exportSchema = false
 )
 abstract class AirportDatabase : RoomDatabase() {

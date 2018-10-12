@@ -19,7 +19,7 @@ object Injection {
     /**
      * Creates an instance of [AirportLocalCache] based on the database DAO.
      */
-    private fun provideCache(context: Context): AirportLocalCache {
+    fun provideCache(context: Context): AirportLocalCache {
         val database = AirportDatabase.getInstance(context)
         return AirportLocalCache(database.airportDao(), database.authDao(), Executors.newSingleThreadExecutor())
     }

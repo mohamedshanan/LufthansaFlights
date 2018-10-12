@@ -1,10 +1,12 @@
 package com.shanan.lufthansa.ui.splash
 
 
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.shanan.lufthansa.data.airports.AirportRepository
+import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthTokenResult
 
 /**
@@ -17,6 +19,7 @@ class SplashViewModel(val repository: AirportRepository) : ViewModel() {
     val loadingVisibility = MutableLiveData<Int>()
     val searchVisibility = MutableLiveData<Int>()
     val isAirportsCached: MutableLiveData<Boolean> = repository.isAirportsCached
+    val searchResults: MutableLiveData<List<Airport>> = repository.searchResults
 
     init {
         loadingVisibility.value = View.VISIBLE
@@ -45,5 +48,15 @@ class SplashViewModel(val repository: AirportRepository) : ViewModel() {
         loadingVisibility.value = View.VISIBLE
         searchVisibility.value = View.GONE
         repository.getAirports(accessToken, isCached)
+    }
+
+    fun search(query: CharSequence) {
+        repository.searchAirports(query.toString())
+    }
+
+    fun getFlights(originCode: String?, destinationCode: String?) {
+        Log.d("_SplashActivity_", "from : ${originCode} to  : ${destinationCode}")
+
+
     }
 }

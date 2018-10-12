@@ -12,24 +12,25 @@ class NamesClassJsonDeserializer : JsonDeserializer<Names> {
 
     override fun deserialize(json: JsonElement, typeOfT: Type, ctx: JsonDeserializationContext): Names {
 
-        val vals = ArrayList<Name>()
+        var name: Name
 
         val jsonObject = json.asJsonObject
         if (jsonObject != null) {
 
-            val nameArray = jsonObject.get("Name")
+            val nameObject = jsonObject.get("Name")
 
-            if (nameArray.isJsonArray) {
-                for (i in 0 until nameArray.asJsonArray.size()) {
-                    vals.add(ctx.deserialize<Any>(nameArray.asJsonArray[i], Name::class.java) as Name)
-                }
-            } else if (nameArray.isJsonObject) {
-                vals.add(ctx.deserialize<Any>(nameArray.asJsonObject, Name::class.java) as Name)
+            if (nameObject.isJsonArray) {
+                name = ctx.deserialize<Any>(nameObject.asJsonArray[0], Name::class.java) as Name
+
+            } else if (nameObject.isJsonObject) {
+                name = ctx.deserialize<Any>(nameObject.asJsonObject, Name::class.java) as Name
             } else {
                 throw RuntimeException("Unexpected JSON type: " + json.javaClass)
             }
+        } else {
+            name = Name("")
         }
 
-        return Names(vals)
+        return Names(name)
     }
 }
