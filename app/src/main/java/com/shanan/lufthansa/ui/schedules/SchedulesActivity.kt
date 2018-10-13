@@ -1,6 +1,7 @@
 package com.shanan.lufthansa.ui.schedules
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -25,9 +26,22 @@ class SchedulesActivity : AppCompatActivity() {
     private var errorSnackBar: Snackbar? = null
     private val adapter = SchedulesAdapter()
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return false
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_flights)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewModel = ViewModelProviders.of(this,
                 Injection.provideViewModelFactory(this, SchedulesViewModel::class.java))

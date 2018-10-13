@@ -59,4 +59,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$roomVersion"
 
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
+    implementation 'com.agrawalsuneet.androidlibs:loaderspack:0.9'
+
 }

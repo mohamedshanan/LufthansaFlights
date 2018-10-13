@@ -2,6 +2,7 @@ package com.shanan.lufthansa.ui.map
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -25,10 +26,24 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMapBinding
     private var errorSnackBar: Snackbar? = null
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return false
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_map)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        val airportsCodes = intent?.extras?.getStringArrayList(Constants.IntentPassing.AIRPORTS_CODES)
 
         viewModel = ViewModelProviders.of(this,
                 Injection.provideViewModelFactory(this, MapViewModel::class.java))
