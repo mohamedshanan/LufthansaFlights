@@ -19,8 +19,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         buildTypes.each {
-            it.buildConfigField 'String', 'LH_CLIENT_ID', LH_CLIENT_ID
-            it.buildConfigField 'String', 'LH_CLIENT_SECRET', LH_CLIENT_SECRET
+            it.buildConfigField "String", "LH_CLIENT_ID", '"wptpzdkwe7s22bqaj4kvqc4v"'
+            it.buildConfigField "String", "LH_CLIENT_SECRET", '"Teuk3a4bF9"'
         }
     }
 

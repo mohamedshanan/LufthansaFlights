@@ -20,6 +20,7 @@ class MapViewModel(private val repository: LocationsRepository) : ViewModel() {
 
     init {
         loadingVisibility.value = View.VISIBLE
+        emptyListVisibility.value = View.GONE
 
         searchResults.observeForever {
             loadingVisibility.value = View.GONE
