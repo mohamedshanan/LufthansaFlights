@@ -11,8 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:background="#fff"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,15 +24,13 @@
             app:layout_constraintTop_toTopOf="parent"
             app:mutableVisibility="@{viewModel.getLoadingVisibility()}">
 
-            <com.agrawalsuneet.loaderspack.loaders.RotatingCircularSticksLoader
+            <com.agrawalsuneet.loaderspack.loaders.ArcProgressLoader
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:rotatingsticks_animDuration="5000"
-                app:rotatingsticks_innerCircleRadius="15dp"
-                app:rotatingsticks_noOfSticks="50"
-                app:rotatingsticks_outerCircleRadius="30dp"
-                app:rotatingsticks_stickColor="@color/colorAccent"
-                app:rotatingsticks_viewBackgroundColor="#FFF" />
+                app:arcprogress_arcRadius="45dp"
+                app:arcprogress_arcWidth="8dp"
+                app:arcprogress_incrementalAngle="7.0"
+                app:arcprogress_maxArcAngle="220.0" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,9 +80,9 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:completionThreshold="2"
+                android:drawableEnd="@drawable/ic_calendar"
                 android:maxLines="1"
                 android:padding="8dp"
-                android:drawableEnd="@drawable/ic_calendar"
                 android:text="@={viewModel.departureDate}" />
 
             <Button

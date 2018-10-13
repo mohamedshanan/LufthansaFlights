@@ -13,4 +13,5 @@
     <string name="no_results">No flights found </string>
     <string name="no_locations">Couldn\'t get airports\' locations </string>
     <string name="unknown">\?</string>
+    <string name="direct">direct</string>
 </resources>

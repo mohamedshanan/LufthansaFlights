@@ -39,11 +39,11 @@ class SchedulesAdapter : ListAdapter<Schedule, RecyclerView.ViewHolder>(SCHEDULE
 
             val stops = StringBuilder()
 
-            stops.append(schedule.flight.get(0).departure.airportCode)
+            stops.append(schedule.flight[0].departure.airportCode)
 
             for (i in 0..(schedule.flight.size.minus(1))) {
-                stops.append(" - ")
-                stops.append(schedule.flight.get(i).arrival.airportCode)
+                stops.append(" >> ")
+                stops.append(schedule.flight[i].arrival.airportCode)
             }
             return stops.toString()
         }
