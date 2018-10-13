@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -40,6 +38,10 @@ class LandingActivity : AppCompatActivity() {
                 .get(LandingViewModel::class.java)
         binding.viewModel = viewModel
 
+        val adapter = AutoCompleteAdapter(this, R.layout.item_airport, R.layout.item_airport, ArrayList<Airport>())
+        from.setAdapter(adapter)
+        to.setAdapter(adapter)
+
         addObservers()
         addAirportsObservers()
     }
@@ -52,7 +54,6 @@ class LandingActivity : AppCompatActivity() {
         })
 
         viewModel.requestResult.error.observe(this, Observer<String> {
-            Log.d("_SplashActivity_", "error : ${it}")
             showSnackBar(it)
         })
     }
@@ -72,35 +73,43 @@ class LandingActivity : AppCompatActivity() {
                 }
 
                 val watcher = object : TextWatcher {
-                    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-                    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}
-                    override fun afterTextChanged(editable: Editable) {
-                        if (editable.length > 1) {
-                            viewModel.search(editable)
+                    override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+
+                    }
+
+                    override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
+                        if (charSequence.length > 2) {
+                            viewModel.search(charSequence)
                         }
                     }
+
+                    override fun afterTextChanged(editable: Editable) {}
                 }
 
                 binding.from.addTextChangedListener(watcher)
                 binding.to.addTextChangedListener(watcher)
-
+                binding.from.threshold = 3
+                binding.from.threshold = 3
                 binding.searchButton.setOnClickListener {
                     viewModel.getFlights(fromAirport?.airportCode, toAirport?.airportCode)
                 }
 
                 viewModel.searchResults.observe(this, Observer {
 
-                    val nameMap: List<String> = it.map { it.names.name.value }
-                    val adapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, nameMap)
-
                     if (from.isFocused) {
-                        from.setAdapter(adapter)
+                        (from.adapter as AutoCompleteAdapter).setItems(it)
                     } else if (to.isFocused) {
-                        to.setAdapter(adapter)
+                        (from.adapter as AutoCompleteAdapter).setItems(it)
                     }
 
-                    binding.from.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> fromAirport = it[position] }
-                    binding.to.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id -> toAirport = it[position] }
+                    binding.from.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                        fromAirport = it[position]
+                        from.setText(it[position].names.name.value)
+                    }
+                    binding.to.onItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+                        toAirport = it[position]
+                        to.setText(it[position].names.name.value)
+                    }
                 })
             }
         })

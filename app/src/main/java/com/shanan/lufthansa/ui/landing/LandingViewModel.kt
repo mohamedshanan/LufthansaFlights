@@ -2,7 +2,6 @@ package com.shanan.lufthansa.ui.landing
 
 
 import android.app.DatePickerDialog
-import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import androidx.databinding.ObservableField
@@ -50,10 +49,6 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
         }
     }
 
-    fun auth() {
-        repository.authenticate()
-    }
-
     fun getAirports(accessToken: String, isCached: Boolean) {
         loadingVisibility.value = View.VISIBLE
         searchVisibility.value = View.GONE
@@ -65,8 +60,6 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
     }
 
     fun getFlights(originCode: String?, destinationCode: String?) {
-
-        Log.d("_SplashActivity_", "from : ${originCode} to  : ${destinationCode} on ${departureDate.get()}")
 
         if (originCode != null && destinationCode != null && departureDate.get() != null) {
             if (!originCode.equals(destinationCode)) {

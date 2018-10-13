@@ -28,7 +28,9 @@ data class Airport(
         @SerializedName("CityCode") val cityCode: String,
         @SerializedName("CountryCode") val countryCode: String,
         @Embedded @SerializedName("Names") val names: Names
-)
+) {
+    override fun toString(): String = names.name.value
+}
 
 data class Names(
         @Embedded @SerializedName("Name") val name: Name
