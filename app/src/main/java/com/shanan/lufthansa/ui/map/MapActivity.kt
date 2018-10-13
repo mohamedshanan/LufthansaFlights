@@ -16,6 +16,7 @@ import com.shanan.lufthansa.R
 import com.shanan.lufthansa.databinding.ActivityMapBinding
 import com.shanan.lufthansa.injection.Injection
 import com.shanan.lufthansa.utils.Constants
+import kotlin.math.roundToInt
 
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -40,32 +41,44 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
 
-        val airportsCodes = intent.extras.getStringArrayList(Constants.IntentPassing.AIRPORTS_CODES)
-        viewModel.search(airportsCodes)
+        val airportsCodes = intent?.extras?.getStringArrayList(Constants.IntentPassing.AIRPORTS_CODES)
+        viewModel.search(airportsCodes?.toList()!!)
         viewModel.searchResults.observe(this, Observer {
 
-            val coordinates = it.map {
-                LatLng(it.position.coordinate.latitude!!,
-                        it.position.coordinate.longitude!!)
+            googleMap.setOnMapLoadedCallback {
+
+                val coordinates: MutableList<LatLng> = ArrayList()
+
+                it.asIterable().forEach {
+                    val latLng = LatLng(it.position.coordinate.latitude!!,
+                            it.position.coordinate.longitude!!)
+                    coordinates.add(latLng)
+                    googleMap.addMarker(MarkerOptions()
+                            .position(latLng)
+                            .draggable(false)
+                            .title(it.cityCode)
+                            .snippet((it.names.name.value).plus(", ").plus(it.countryCode)))
+                }
+
+                val schedulePolyline = googleMap.addPolyline(PolylineOptions()
+                        .clickable(true)
+                        .addAll(coordinates))
+
+                schedulePolyline.startCap = RoundCap()
+                schedulePolyline.width = 8f
+                schedulePolyline.color = Color.BLUE
+                schedulePolyline.jointType = JointType.ROUND
+                schedulePolyline.endCap = RoundCap()
+
+                // Position the map's camera to a center point with the appropriate zoom level
+                val width = resources.displayMetrics.widthPixels
+                val padding = (width * 0.15).roundToInt()
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(buildBounds(coordinates), padding))
             }
-
-            val schedulePolyline = googleMap.addPolyline(PolylineOptions()
-                    .clickable(true)
-                    .addAll(coordinates))
-
-            schedulePolyline.startCap = RoundCap()
-            schedulePolyline.width = 8f
-            schedulePolyline.color = Color.BLUE
-            schedulePolyline.jointType = JointType.ROUND
-            schedulePolyline.endCap = RoundCap()
-
-            // Position the map's camera to a center point and
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(calcZoomLevel(coordinates), 40))
-
         })
     }
 
-    private fun calcZoomLevel(coordinates: List<LatLng>): LatLngBounds {
+    private fun buildBounds(coordinates: List<LatLng>): LatLngBounds {
 
         val builder = LatLngBounds.Builder()
         for (coordinate in coordinates) {
