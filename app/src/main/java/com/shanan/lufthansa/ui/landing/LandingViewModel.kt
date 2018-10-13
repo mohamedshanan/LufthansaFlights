@@ -11,8 +11,8 @@ import androidx.lifecycle.ViewModel
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthResponse
-import com.shanan.lufthansa.model.FlightRequest
 import com.shanan.lufthansa.model.RequestResult
+import com.shanan.lufthansa.model.ScheduleRequest
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -29,7 +29,7 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
     val searchVisibility = MutableLiveData<Int>()
     val isAirportsCached: MutableLiveData<Boolean> = repository.isAirportsCached
     val searchResults: MutableLiveData<List<Airport>> = repository.searchResults
-    val flightRequest: MutableLiveData<FlightRequest> = MutableLiveData()
+    val flightRequest: MutableLiveData<ScheduleRequest> = MutableLiveData()
 
     init {
         loadingVisibility.value = View.VISIBLE
@@ -70,7 +70,7 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
         if (originCode != null && destinationCode != null && departureDate.get() != null) {
             if (!originCode.equals(destinationCode)) {
-                flightRequest.postValue(FlightRequest(originCode, destinationCode, departureDate.get().toString()))
+                flightRequest.postValue(ScheduleRequest(originCode, destinationCode, departureDate.get().toString()))
             } else {
                 requestResult.error.postValue("Origin and destination airports must be different")
             }

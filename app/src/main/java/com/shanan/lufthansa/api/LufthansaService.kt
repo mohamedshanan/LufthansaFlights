@@ -76,7 +76,7 @@ fun getAirports(
 fun searchFlights(
         service: LufthansaService,
         token: String,
-        request: FlightRequest,
+        request: ScheduleRequest,
         offset: Int,
         limit: Int,
         onSuccess: (flightsResponse: FlightsResponse?) -> Unit,

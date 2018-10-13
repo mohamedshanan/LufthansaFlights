@@ -17,7 +17,7 @@ import com.shanan.lufthansa.databinding.ActivitySplashBinding
 import com.shanan.lufthansa.injection.Injection
 import com.shanan.lufthansa.model.Airport
 import com.shanan.lufthansa.model.AuthResponse
-import com.shanan.lufthansa.ui.flights.FlightsActivity
+import com.shanan.lufthansa.ui.schedules.SchedulesActivity
 import com.shanan.lufthansa.utils.Constants
 import com.shanan.lufthansa.utils.Constants.IntentPassing.FLIGHT_PARAMETERS
 import com.shanan.lufthansa.utils.Utils
@@ -106,7 +106,7 @@ class LandingActivity : AppCompatActivity() {
         })
 
         viewModel.flightRequest.observe(this, Observer {
-            val intent = Intent(this, FlightsActivity::class.java)
+            val intent = Intent(this, SchedulesActivity::class.java)
             intent.putExtra(FLIGHT_PARAMETERS, it as Serializable)
             startActivity(intent)
         })

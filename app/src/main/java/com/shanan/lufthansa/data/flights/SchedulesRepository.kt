@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.api.searchFlights
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
-import com.shanan.lufthansa.model.FlightRequest
 import com.shanan.lufthansa.model.FlightsResponse
+import com.shanan.lufthansa.model.ScheduleRequest
 
-class FlightRepository(private val service: LufthansaService, private val cache: AirportLocalCache) {
+class SchedulesRepository(private val service: LufthansaService, private val cache: AirportLocalCache) {
 
     // keep the last requested page. When the request is successful, increment the page number.
     private var offset = 0
@@ -24,8 +24,8 @@ class FlightRepository(private val service: LufthansaService, private val cache:
     /**
      * Search flight with origin, destination and date
      */
-    fun search(request: FlightRequest) {
-        Log.d("FlightRepository", "New query: $request")
+    fun search(request: ScheduleRequest) {
+        Log.d("SchedulesRepository", "New query: $request")
         offset = 0
 
         cache.getAccessToken().observeForever {
@@ -36,11 +36,11 @@ class FlightRepository(private val service: LufthansaService, private val cache:
         }
     }
 
-    fun requestMore(request: FlightRequest) {
+    fun requestMore(request: ScheduleRequest) {
         requestData(request)
     }
 
-    private fun requestData(query: FlightRequest) {
+    private fun requestData(query: ScheduleRequest) {
         if (isRequestInProgress) return
 
         isRequestInProgress = true

@@ -7,9 +7,9 @@ import com.shanan.lufthansa.api.LufthansaService
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.data.airports.db.AirportDatabase
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
-import com.shanan.lufthansa.data.flights.FlightRepository
-import com.shanan.lufthansa.ui.flights.FlightsViewModel
+import com.shanan.lufthansa.data.flights.SchedulesRepository
 import com.shanan.lufthansa.ui.landing.LandingViewModel
+import com.shanan.lufthansa.ui.schedules.SchedulesViewModel
 import java.util.concurrent.Executors
 
 
@@ -32,8 +32,8 @@ object Injection {
      * Creates an instance of [AirportRepository] based on the [LufthansaService] and a
      * [AirportLocalCache]
      */
-    private fun provideFlightRepository(context: Context): FlightRepository {
-        return FlightRepository(LufthansaService.create(), provideCache(context))
+    private fun provideFlightRepository(context: Context): SchedulesRepository {
+        return SchedulesRepository(LufthansaService.create(), provideCache(context))
     }
 
     /**
@@ -50,7 +50,7 @@ object Injection {
      */
 
     fun <T : ViewModel> provideViewModelFactory(context: Context, modelClass: Class<T>): ViewModelProvider.Factory {
-        if (modelClass.isAssignableFrom(FlightsViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(SchedulesViewModel::class.java)) {
             return ViewModelFactory(provideFlightRepository(context))
         }
         if (modelClass.isAssignableFrom(LandingViewModel::class.java)) {

@@ -1,4 +1,4 @@
-package com.shanan.lufthansa.ui.flights
+package com.shanan.lufthansa.ui.schedules
 
 import android.os.Bundle
 import android.view.View
@@ -13,31 +13,31 @@ import com.google.android.material.snackbar.Snackbar
 import com.shanan.lufthansa.R
 import com.shanan.lufthansa.databinding.ActivityFlightsBinding
 import com.shanan.lufthansa.injection.Injection
-import com.shanan.lufthansa.model.FlightRequest
 import com.shanan.lufthansa.model.FlightsResponse
+import com.shanan.lufthansa.model.ScheduleRequest
 import com.shanan.lufthansa.utils.Constants.IntentPassing.FLIGHT_PARAMETERS
 import kotlinx.android.synthetic.main.activity_flights.*
 
-class FlightsActivity : AppCompatActivity() {
+class SchedulesActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: FlightsViewModel
+    private lateinit var viewModel: SchedulesViewModel
     private lateinit var binding: ActivityFlightsBinding
     private var errorSnackBar: Snackbar? = null
-    private val adapter = FlightsAdapter()
+    private val adapter = SchedulesAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_flights)
 
         viewModel = ViewModelProviders.of(this,
-                Injection.provideViewModelFactory(this, FlightsViewModel::class.java))
-                .get(FlightsViewModel::class.java)
+                Injection.provideViewModelFactory(this, SchedulesViewModel::class.java))
+                .get(SchedulesViewModel::class.java)
         binding.viewModel = viewModel
 
         initRecyclerView()
         initAdapter()
 //        val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
-        val request = intent.getSerializableExtra(FLIGHT_PARAMETERS) as FlightRequest
+        val request = intent.getSerializableExtra(FLIGHT_PARAMETERS) as ScheduleRequest
         viewModel.searchRepo(request)
 
     }
@@ -56,7 +56,7 @@ class FlightsActivity : AppCompatActivity() {
             adapter.submitList(it?.ScheduleResource?.schedule)
         })
         viewModel.error.observe(this, Observer<String> {
-            if ((list.adapter as FlightsAdapter).itemCount == 0) {
+            if ((list.adapter as SchedulesAdapter).itemCount == 0) {
                 showEmptyList(true)
             } else {
                 showSnackBar(it)

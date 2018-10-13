@@ -1,24 +1,24 @@
-package com.shanan.lufthansa.ui.flights
+package com.shanan.lufthansa.ui.schedules
 
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.shanan.lufthansa.data.flights.FlightRepository
-import com.shanan.lufthansa.model.FlightRequest
+import com.shanan.lufthansa.data.flights.SchedulesRepository
 import com.shanan.lufthansa.model.FlightsResponse
+import com.shanan.lufthansa.model.ScheduleRequest
 
 /**
- * ViewModel for the [FlightsActivity] screen.
- * The ViewModel works with the [FlightRepository] to get the data.
+ * ViewModel for the [SchedulesActivity] screen.
+ * The ViewModel works with the [SchedulesRepository] to get the data.
  */
-class FlightsViewModel(private val repository: FlightRepository) : ViewModel() {
+class SchedulesViewModel(private val repository: SchedulesRepository) : ViewModel() {
 
     companion object {
         private const val VISIBLE_THRESHOLD = 10
     }
 
     val loadingVisibility = MutableLiveData<Int>()
-    private val queryLiveData = MutableLiveData<FlightRequest>()
+    private val queryLiveData = MutableLiveData<ScheduleRequest>()
 
     var flightsResult: MutableLiveData<FlightsResponse> = repository.flightsResponse
     var error: MutableLiveData<String> = repository.networkErrors
@@ -35,7 +35,7 @@ class FlightsViewModel(private val repository: FlightRepository) : ViewModel() {
     /**
      * Search a repository based on a query string.
      */
-    fun searchRepo(request: FlightRequest) {
+    fun searchRepo(request: ScheduleRequest) {
         loadingVisibility.value = View.VISIBLE
         queryLiveData.postValue(request)
         repository.search(request)
@@ -54,5 +54,5 @@ class FlightsViewModel(private val repository: FlightRepository) : ViewModel() {
      * Get the last query value.
      */
 
-    private fun lastQueryValue(): FlightRequest? = queryLiveData.value
+    private fun lastQueryValue(): ScheduleRequest? = queryLiveData.value
 }
