@@ -8,7 +8,9 @@ import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.data.airports.db.AirportDatabase
 import com.shanan.lufthansa.data.airports.db.AirportLocalCache
 import com.shanan.lufthansa.data.flights.SchedulesRepository
+import com.shanan.lufthansa.data.locations.LocationsRepository
 import com.shanan.lufthansa.ui.landing.LandingViewModel
+import com.shanan.lufthansa.ui.map.MapViewModel
 import com.shanan.lufthansa.ui.schedules.SchedulesViewModel
 import java.util.concurrent.Executors
 
@@ -29,7 +31,7 @@ object Injection {
     }
 
     /**
-     * Creates an instance of [AirportRepository] based on the [LufthansaService] and a
+     * Creates an instance of [SchedulesRepository] based on the [LufthansaService] and a
      * [AirportLocalCache]
      */
     private fun provideFlightRepository(context: Context): SchedulesRepository {
@@ -45,6 +47,14 @@ object Injection {
     }
 
     /**
+     * Creates an instance of [LocationsRepository] based on the [AirportLocalCache]
+     */
+
+    private fun provideLocationsRepository(context: Context): LocationsRepository {
+        return LocationsRepository(provideCache(context))
+    }
+
+    /**
      * Provides the [ViewModelProvider.Factory] that is then used to get a reference to
      * [ViewModel] objects.
      */
@@ -55,6 +65,9 @@ object Injection {
         }
         if (modelClass.isAssignableFrom(LandingViewModel::class.java)) {
             return ViewModelFactory(provideAirportRepository(context))
+        }
+        if (modelClass.isAssignableFrom(MapViewModel::class.java)) {
+            return ViewModelFactory(provideLocationsRepository(context))
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

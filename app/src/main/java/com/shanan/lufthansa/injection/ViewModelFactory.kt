@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.shanan.lufthansa.data.airports.AirportRepository
 import com.shanan.lufthansa.data.flights.SchedulesRepository
+import com.shanan.lufthansa.data.locations.LocationsRepository
 import com.shanan.lufthansa.ui.landing.LandingViewModel
+import com.shanan.lufthansa.ui.map.MapViewModel
 import com.shanan.lufthansa.ui.schedules.SchedulesViewModel
 
 /**
@@ -20,6 +22,10 @@ class ViewModelFactory<R>(private val repository: R) : ViewModelProvider.Factory
         if (modelClass.isAssignableFrom(LandingViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return LandingViewModel(repository as AirportRepository) as T
+        }
+        if (modelClass.isAssignableFrom(MapViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return MapViewModel(repository as LocationsRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

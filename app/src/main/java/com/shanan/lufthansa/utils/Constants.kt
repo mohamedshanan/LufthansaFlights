@@ -8,6 +8,7 @@ object Constants {
 
     object IntentPassing {
         const val FLIGHT_PARAMETERS: String = "flight_parameters"
+        const val AIRPORTS_CODES: String = "airports_codes"
     }
 
     const val BASE_URL: String = "https://api.lufthansa.com/v1/"

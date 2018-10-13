@@ -39,6 +39,15 @@ class AirportLocalCache(
     }
 
     /**
+     * Request a LiveData<List<Airport>> from the Dao, based on a airport code.
+     * @param query airport code
+     */
+    fun getAirportsListByCodes(codes: List<String>): LiveData<List<Airport>> {
+        return airportDao.getAirportsListByCodes(codes)
+    }
+
+
+    /**
      * Insert AuthResponse the database, on a background thread.
      */
     fun insert(authResponse: AuthResponse?, insertFinished: () -> Unit) {

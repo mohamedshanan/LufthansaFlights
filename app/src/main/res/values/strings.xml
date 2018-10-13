@@ -11,5 +11,6 @@
     <string name="loading_airports">Loading airports data \n please wait</string>
     <string name="loading_flights">Searching flights \n please wait</string>
     <string name="no_results">No flights found </string>
+    <string name="no_locations">Couldn\'t get airports\' locations </string>
     <string name="unknown">\?</string>
 </resources>
