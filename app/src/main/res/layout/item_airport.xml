@@ -16,7 +16,7 @@
         android:textColor="@color/textColor"
         android:textSize="16sp"
         android:textStyle="bold"
-        tools:name="Cairo International" />
+        tools:text="Cairo International" />
 
     <TextView
         android:id="@+id/cityCode"
@@ -26,6 +26,6 @@
         android:gravity="end"
         android:textSize="16sp"
         android:textStyle="bold"
-        tools:name="CAI" />
+        tools:text="CAI" />
 
 </LinearLayout>
