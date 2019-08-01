@@ -183,6 +183,7 @@ interface LufthansaService {
                     .build()
 
             val gson = GsonBuilder()
+                    .registerTypeAdapter(Airport::class.java, AirportJsonDeserializer())
                     .registerTypeAdapter(Names::class.java, NamesClassJsonDeserializer())
                     .registerTypeAdapter(ScheduleResource::class.java, ScheduleResourceJsonDeserializer())
                     .registerTypeAdapter(Schedule::class.java, ScheduleJsonDeserializer())
