@@ -83,7 +83,8 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
         val monthStr = if (month + 1 < 10) "0".plus(month + 1) else (month + 1).toString()
-        val formattedDate = "$year-$monthStr-$dayOfMonth"
+        val dayStr = if (dayOfMonth < 10) "0".plus(month + 1) else (dayOfMonth).toString()
+        val formattedDate = "$year-$monthStr-$dayStr"
         departureDate.set(formattedDate)
     }
 
