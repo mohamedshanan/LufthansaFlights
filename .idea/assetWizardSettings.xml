@@ -23,7 +23,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/maps/ic_flight_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/Applications/Android%20Studio.app/Contents/plugins/android/lib/android.jar!/images/material_design_icons/notification/ic_sms_failed_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -33,8 +33,9 @@
                         </option>
                         <option name="values">
                           <map>
+                            <entry key="autoMirrored" value="true" />
                             <entry key="color" value="ff8800" />
-                            <entry key="outputName" value="ic_flight" />
+                            <entry key="outputName" value="ic_error" />
                             <entry key="sourceFile" value="$USER_HOME$" />
                           </map>
                         </option>

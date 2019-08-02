@@ -5,8 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="2dp"
     android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="4dp"
     app:cardElevation="2dp"
@@ -34,9 +34,9 @@
             android:id="@+id/departureAirport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableEnd="@drawable/ic_flight_takeoff"
             android:gravity="end"
             android:lines="1"
-            android:drawableEnd="@drawable/ic_flight_takeoff"
             android:textColor="@color/textSecondaryColor"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,12 +58,12 @@
             android:id="@+id/arrivalAirport"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_flight_land"
             android:gravity="start"
             android:lines="1"
             android:textColor="@color/textSecondaryColor"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:drawableStart="@drawable/ic_flight_land"
             app:layout_constraintTop_toBottomOf="@id/arrivalTime"
             tools:text="TXL" />
 
@@ -81,6 +81,7 @@
             tools:text="1D 2H 23M" />
 
         <View
+            android:id="@+id/view"
             android:layout_width="180dp"
             android:layout_height="2dp"
             android:background="@color/textSecondaryColor"
@@ -92,6 +93,20 @@
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="1D 2H 23M" />
 
+
+        <TextView
+            android:id="@+id/airlinesId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:text="LH" />
+
         <TextView
             android:id="@+id/stops"
             android:layout_width="wrap_content"
@@ -99,9 +114,9 @@
             android:lines="1"
             android:textColor="@color/red"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/airlinesId"
             app:layout_constraintVertical_chainStyle="packed"
             tools:text="2 stops" />
 

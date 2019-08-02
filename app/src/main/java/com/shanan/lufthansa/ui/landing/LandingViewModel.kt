@@ -23,7 +23,7 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
     val departureDate: ObservableField<String> = ObservableField()
 
-    var requestResult: RequestResult<AuthResponse> = repository.requestResult
+    var authResult: RequestResult<AuthResponse> = repository.requestResult
     val loadingVisibility = MutableLiveData<Int>()
     val searchVisibility = MutableLiveData<Int>()
     val isAirportsCached: MutableLiveData<Boolean> = repository.isAirportsCached
@@ -36,10 +36,10 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
 
         repository.authenticate()
 
-        requestResult.data.observeForever {
+        authResult.data.observeForever {
             loadingVisibility.value = View.GONE
         }
-        requestResult.error.observeForever {
+        authResult.error.observeForever {
             loadingVisibility.value = View.GONE
         }
 
@@ -65,10 +65,10 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
             if (!originCode.equals(destinationCode)) {
                 flightRequest.postValue(ScheduleRequest(originCode, destinationCode, departureDate.get().toString()))
             } else {
-                requestResult.error.postValue("Origin and destination airports must be different")
+                authResult.error.postValue("Origin and destination airports must be different")
             }
         } else {
-            requestResult.error.postValue("Please select origin, destination and departure date then try again.")
+            authResult.error.postValue("Please select origin, destination and departure date then try again.")
         }
     }
 
@@ -86,6 +86,12 @@ class LandingViewModel(val repository: AirportRepository) : ViewModel(), DatePic
         val dayStr = if (dayOfMonth < 10) "0".plus(month + 1) else (dayOfMonth).toString()
         val formattedDate = "$year-$monthStr-$dayStr"
         departureDate.set(formattedDate)
+    }
+
+    fun authenticate() {
+        repository.authenticate()
+        loadingVisibility.value = View.VISIBLE
+        searchVisibility.value = View.GONE
     }
 
 }

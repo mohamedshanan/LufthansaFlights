@@ -28,8 +28,8 @@ class SchedulesAdapter : ListAdapter<Schedule, RecyclerView.ViewHolder>(SCHEDULE
         private val SCHEDULE_COMPARATOR = object : DiffUtil.ItemCallback<Schedule>() {
             override fun areItemsTheSame(oldItem: Schedule, newItem: Schedule): Boolean =
                     getStopsString(oldItem).equals(getStopsString(newItem)) ||
-                            oldItem.flight.get(0).marketingCarrier.flightNumber ==
-                            newItem.flight.get(0).marketingCarrier.flightNumber
+                            oldItem.flight[0].marketingCarrier.flightNumber ==
+                            newItem.flight[0].marketingCarrier.flightNumber
 
             override fun areContentsTheSame(oldItem: Schedule, newItem: Schedule): Boolean =
                     oldItem == newItem

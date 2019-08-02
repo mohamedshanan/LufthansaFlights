@@ -1,9 +1,11 @@
 package com.shanan.lufthansa.ui.map
 
-import android.graphics.Color
+import android.content.Context
+import android.graphics.*
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -44,6 +46,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val airportsCodes = intent?.extras?.getStringArrayList(Constants.IntentPassing.AIRPORTS_CODES)
+        supportActionBar?.title = "${airportsCodes?.get(0)} - ${airportsCodes?.get(airportsCodes.size - 1)}"
 
         viewModel = ViewModelProviders.of(this,
                 Injection.provideViewModelFactory(this, MapViewModel::class.java))
@@ -64,15 +67,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 val coordinates: MutableList<LatLng> = ArrayList()
 
-                it.asIterable().forEach {
-                    val latLng = LatLng(it.position.coordinate.latitude!!,
-                            it.position.coordinate.longitude!!)
+                it.asIterable().forEach { airport ->
+                    val latLng = LatLng(airport.position.coordinate.latitude!!,
+                            airport.position.coordinate.longitude!!)
                     coordinates.add(latLng)
                     googleMap.addMarker(MarkerOptions()
                             .position(latLng)
                             .draggable(false)
-                            .title(it.cityCode)
-                            .snippet((it.names.name.value).plus(", ").plus(it.countryCode)))
+                            .title(airport.airportCode)
+                            .snippet((airport.names.name.value).plus(", ").plus(airport.countryCode))
+                            .icon(bitmapDescriptorFromVector(this,
+                                    (airport.cityCode))))
                 }
 
                 val schedulePolyline = googleMap.addPolyline(PolylineOptions()
@@ -80,9 +85,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                         .addAll(coordinates))
 
                 schedulePolyline.startCap = RoundCap()
-                schedulePolyline.width = 8f
-                schedulePolyline.color = Color.BLUE
-                schedulePolyline.jointType = JointType.ROUND
+                schedulePolyline.width = 5f
+                schedulePolyline.color = ContextCompat.getColor(this, R.color.colorPrimary)
+                schedulePolyline.jointType = JointType.DEFAULT
                 schedulePolyline.endCap = RoundCap()
 
                 // Position the map's camera to a center point with the appropriate zoom level
@@ -102,8 +107,25 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         return builder.build()
     }
 
-    private fun showSnackBar(message: String) {
-        errorSnackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_INDEFINITE)
-        errorSnackBar?.show()
+    private fun bitmapDescriptorFromVector(context: Context, txt: String): BitmapDescriptor {
+        val background = ContextCompat.getDrawable(context, R.drawable.ic_marker_bg)
+        background!!.setBounds(0, 0, background.intrinsicWidth, background.intrinsicHeight)
+
+        val bitmap = Bitmap.createBitmap(background.intrinsicWidth, background.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        background.draw(canvas)
+
+        val textPaint = Paint()
+        textPaint.typeface = Typeface.DEFAULT_BOLD
+        textPaint.textSize = 30f
+        textPaint.color = Color.BLACK
+        textPaint.measureText(txt)
+
+        val yPos = (canvas.height / 2 - (textPaint.descent() + textPaint.ascent()) / 2)
+
+        canvas.drawText(txt, 15f, yPos, textPaint)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
+
 }

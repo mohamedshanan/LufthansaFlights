@@ -50,8 +50,9 @@ class SchedulesActivity : AppCompatActivity() {
 
         initRecyclerView()
         initAdapter()
-//        val query = savedInstanceState?.getString(LAST_SEARCH_QUERY) ?: DEFAULT_QUERY
+
         val request = intent.getSerializableExtra(FLIGHT_PARAMETERS) as ScheduleRequest
+        supportActionBar?.title = "${request.origin} - ${request.destination}"
         viewModel.searchRepo(request)
 
     }
@@ -89,7 +90,7 @@ class SchedulesActivity : AppCompatActivity() {
     }
 
     private fun setupScrollListener() {
-        val layoutManager = list.layoutManager as LinearLayoutManager
+        val layoutManager = LinearLayoutManager(this)
         list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)

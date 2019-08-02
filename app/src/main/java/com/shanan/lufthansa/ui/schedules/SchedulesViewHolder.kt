@@ -22,6 +22,7 @@ class SchedulesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val arrivalTimeTv: TextView = view.findViewById(R.id.arrivalTime)
     private val arrivalAirportTv: TextView = view.findViewById(R.id.arrivalAirport)
     private val totalTimeTv: TextView = view.findViewById(R.id.totalTime)
+    private val airlinesId: TextView = view.findViewById(R.id.airlinesId)
     private val stopsTv: TextView = view.findViewById(R.id.stops)
 
     private var schedule: Schedule? = null
@@ -34,7 +35,7 @@ class SchedulesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         airportsList.add(schedule.flight.get(0).departure.airportCode)
 
         for (i in 0 until (schedule.flight.size)) {
-            airportsList.add(schedule.flight.get(i).arrival.airportCode)
+            airportsList.add(schedule.flight[i].arrival.airportCode)
         }
         with(schedule.flight) {
             departureTimeTv.text = get(0).departure.scheduledTimeLocal.dateTime
@@ -43,6 +44,13 @@ class SchedulesViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
 
         totalTimeTv.text = schedule.totalJourney?.duration?.replace("P", "")?.replace("T", "")?.replace("D", "D ")?.replace("H", "H ")
+
+        val airlines = schedule.flight[0].marketingCarrier.airlineID
+        if (airlines != null) {
+            airlinesId.text = airlines
+        } else {
+            airlinesId.visibility = View.GONE
+        }
 
         val stopsLength = airportsList.size - 2
 

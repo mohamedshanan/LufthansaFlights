@@ -4,7 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.AdapterView
+import androidx.annotation.Nullable
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -20,6 +22,7 @@ import com.shanan.lufthansa.utils.Constants
 import com.shanan.lufthansa.utils.Constants.IntentPassing.FLIGHT_PARAMETERS
 import com.shanan.lufthansa.utils.Utils
 import kotlinx.android.synthetic.main.activity_splash.*
+import kotlinx.android.synthetic.main.layout_error.*
 import java.io.Serializable
 
 class LandingActivity : AppCompatActivity() {
@@ -49,12 +52,16 @@ class LandingActivity : AppCompatActivity() {
     private fun addObservers() {
         val isAirportsCached = Utils.getBooleanFromPrefs(Constants.Prefs.IS_AIRPORTS_CACHED, this)
 
-        viewModel.requestResult.data.observe(this, Observer<AuthResponse> {
+        viewModel.authResult.data.observe(this, Observer<AuthResponse> {
             viewModel.getAirports(it.access_token, isAirportsCached)
         })
 
-        viewModel.requestResult.error.observe(this, Observer<String> {
+        viewModel.authResult.error.observe(this, Observer<String> {
             showSnackBar(it)
+            showError(it, getString(R.string.retry), View.OnClickListener {
+                layout_error_view.visibility = View.GONE
+                viewModel.authenticate()
+            })
         })
     }
 
@@ -121,8 +128,25 @@ class LandingActivity : AppCompatActivity() {
         })
     }
 
+    private fun showError(textString: String, @Nullable actionString: String?,
+                          actionListener: View.OnClickListener? = null) {
+        viewModel.loadingVisibility.value = View.GONE
+        viewModel.searchVisibility.value = View.GONE
+        layout_error_view.visibility = View.VISIBLE
+
+        if (actionString != null) {
+            layout_error_action.setOnClickListener(actionListener)
+            layout_error_action.visibility = View.VISIBLE
+        }
+
+        layout_error_action.text = actionString
+        layout_error_text.text = textString
+    }
+
+
     private fun showSnackBar(message: String) {
-        errorSnackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_INDEFINITE)
+        errorSnackBar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
         errorSnackBar?.show()
     }
+
 }
