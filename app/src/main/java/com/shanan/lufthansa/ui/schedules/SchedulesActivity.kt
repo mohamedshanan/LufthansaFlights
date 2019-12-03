@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
+import com.shanan.lufthansa.App
 import com.shanan.lufthansa.R
 import com.shanan.lufthansa.databinding.ActivityFlightsBinding
 import com.shanan.lufthansa.injection.Injection
@@ -43,8 +44,10 @@ class SchedulesActivity : AppCompatActivity() {
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        val injector = (application as App).injector
+
         viewModel = ViewModelProviders.of(this,
-                Injection.provideViewModelFactory(this, SchedulesViewModel::class.java))
+                injector.provideViewModelFactory(this, SchedulesViewModel::class.java))
                 .get(SchedulesViewModel::class.java)
         binding.viewModel = viewModel
 

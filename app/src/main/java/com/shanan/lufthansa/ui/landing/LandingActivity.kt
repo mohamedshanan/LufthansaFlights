@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
+import com.shanan.lufthansa.App
 import com.shanan.lufthansa.R
 import com.shanan.lufthansa.databinding.ActivitySplashBinding
 import com.shanan.lufthansa.injection.Injection
@@ -37,7 +38,8 @@ class LandingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_splash)
 
-        viewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this, LandingViewModel::class.java))
+        val injector = (application as App).injector
+        viewModel = ViewModelProviders.of(this, injector.provideViewModelFactory(this, LandingViewModel::class.java))
                 .get(LandingViewModel::class.java)
         binding.viewModel = viewModel
 

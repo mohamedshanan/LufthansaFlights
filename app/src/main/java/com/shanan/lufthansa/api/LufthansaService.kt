@@ -3,6 +3,7 @@ package com.shanan.lufthansa.api
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.shanan.lufthansa.BuildConfig
+import com.shanan.lufthansa.injection.Injection
 import com.shanan.lufthansa.model.*
 import com.shanan.lufthansa.utils.*
 import com.shanan.lufthansa.utils.Constants.BEARER
@@ -169,35 +170,4 @@ interface LufthansaService {
                       @Query("offset") offset: Int,
                       @Query("limit") limit: Int):
             Call<FlightsResponse>
-
-
-    companion object {
-
-        fun create(): LufthansaService {
-            val logger = HttpLoggingInterceptor()
-            logger.level = Level.BODY
-
-            val client = OkHttpClient.Builder()
-                    .addInterceptor(logger)
-                    .readTimeout(60, TimeUnit.SECONDS)
-                    .build()
-
-            val gson = GsonBuilder()
-                    .registerTypeAdapter(Airport::class.java, AirportJsonDeserializer())
-                    .registerTypeAdapter(Names::class.java, NamesClassJsonDeserializer())
-                    .registerTypeAdapter(ScheduleResource::class.java, ScheduleResourceJsonDeserializer())
-                    .registerTypeAdapter(Schedule::class.java, ScheduleJsonDeserializer())
-                    .registerTypeAdapter(Terminal::class.java, TerminalClassDeserializer())
-                    .setLenient()
-                    .create()
-
-
-            return Retrofit.Builder()
-                    .baseUrl(Constants.BASE_URL)
-                    .client(client)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .build()
-                    .create(LufthansaService::class.java)
-        }
-    }
 }

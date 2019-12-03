@@ -15,6 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.google.android.material.snackbar.Snackbar
+import com.shanan.lufthansa.App
 import com.shanan.lufthansa.R
 import com.shanan.lufthansa.databinding.ActivityMapBinding
 import com.shanan.lufthansa.injection.Injection
@@ -48,8 +49,9 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         val airportsCodes = intent?.extras?.getStringArrayList(Constants.IntentPassing.AIRPORTS_CODES)
         supportActionBar?.title = "${airportsCodes?.get(0)} - ${airportsCodes?.get(airportsCodes.size - 1)}"
 
+        val injector = (application as App).injector
         viewModel = ViewModelProviders.of(this,
-                Injection.provideViewModelFactory(this, MapViewModel::class.java))
+                injector.provideViewModelFactory(this, MapViewModel::class.java))
                 .get(MapViewModel::class.java)
         binding.viewModel = viewModel
 
